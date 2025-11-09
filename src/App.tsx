@@ -1,11 +1,9 @@
-// import React from 'react'
-
-import Counter from "./features/counter/Counter";
+import Blog from "./pages/blog"
 
 export default function App() {
   return (
     <div>
-      <Counter/>
+      <Blog/>
     </div>
   )
 }
