@@ -1,18 +1,15 @@
-import { configureStore} from "@reduxjs/toolkit";
-import { counterSlice } from "./features/counter/counterSlice";
+import { configureStore } from '@reduxjs/toolkit'
+import blogReducer from './pages/blog/blog.slice'
+// ...
 
-
-// Main function of RTK in order to create Redux store
-// It's more convenient than createStore because it make a lot of for you automatically
-// conbine reducer, add middleware for thunk, set up redux devtools
 export const store = configureStore({
-    reducer: {
-        counter: counterSlice.reducer,
-    },
+  reducer: {
+    blog: blogReducer,
+    // ban cầu là tên. cái thứ 2 chính là cái hàm reducer đã được trích xuất
+  },
 })
 
-// Infer the RootState and AppDispatch types form the store itself
+// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>
-
-// Inferred type: {posts: PostState, comments: CommentsState, users: UsersState}
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch
