@@ -1,6 +1,13 @@
+import { useGetPostsQuery } from "../../blog.service";
 import PostItem from "../postItem";
+import SkeletonPost from "../SkeletonPost";
 
 export default function PostList() {
+
+  // isLoading chỉ dành cho fetch đầu tiên
+  // isFetching là cho mỗi lần gọi api
+  const {data, isLoading, isFetching} =  useGetPostsQuery()
+  console.log(data, isLoading, isFetching)
   return (
     <div className="bg-white py-6 sm:py-8 lg:py-12">
       <div className="mx-auto px-4 md:px-8">
@@ -14,11 +21,13 @@ export default function PostList() {
           </p>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-2 xl:grid-cols-2 xl:gap-8">
-          <PostItem/>
-          <PostItem/>
-          <PostItem/>
-          <PostItem/>
-        </div>
+          {isFetching && (
+            <>
+              <SkeletonPost/>
+              <SkeletonPost/>
+            </>
+          )}
+          {!isFetching && data?.map((post) => <PostItem key={post.id} post={post}/>)}        </div>
       </div>
     </div>             
   )
