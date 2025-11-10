@@ -1,5 +1,6 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {type Post } from '@/types/blog.type'
+// import { resourceLimits } from 'worker_threads'
 
 // bên slice ta dùng createSlice để tạo slice
 // bên RTK query thì ta dùng createApi
@@ -22,11 +23,30 @@ import {type Post } from '@/types/blog.type'
 
 export const blogApi = createApi({
     reducerPath: 'blogApi', //Tên field trong redux state
+    tagTypes: ['Posts'], //Những kiểu tag cho phép dùng trong blogApi
     baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:4000/'}),
     endpoints: build => ({
         // Generic Type theo thứ tự là kiểu response trả về và argument
         getPosts: build.query<Post[], void>({
-            query: ()=> 'posts'
+            query: ()=> 'posts',
+            providesTags(result){
+                /*
+                    Cái callback này sẽ chạy mỗi khi getPost chạy
+                    Mong muốn là sẽ return về một mảng kiểu
+                    interface Tags: {
+                        type: "Posts";
+                        id: string;
+                    }[] 
+                    vì thế phải thêm as const vào để báo hiệu type là Read only, không thể mutate
+                */
+               if(result) {
+                const final = [...result.map(({id}) => ({type: 'Posts' as const,id})), {type: 'Posts' as const, id: 'LIST'}]
+                return final
+               }
+            //    const final = [{type: 'Posts' as const, id: 'LIST'}]
+            //    return final
+               return [{type: 'Posts', id: 'LIST'}]
+            }
         }),
         /*
             Chúng ta dùng mutation đối với các trường hợp POST, PUT, DELETE
@@ -39,7 +59,13 @@ export const blogApi = createApi({
                     method: 'POST',
                     body
                 }
-            }
+            },
+            /*
+                invalidatesTag cung cấp các tag để báo hiệu cho những method nào có providesTag
+                match với nó để bị gọi lại
+                Trong trường hợp này thì getPosts sẽ chạy lại
+            */
+            invalidatesTags: (result, error, body) => [{type: 'Posts', id: 'LIST'}]
        })
     })   
 })

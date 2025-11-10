@@ -47,6 +47,14 @@
       "title": "hoi",
       "publishDate": "2025-11-06T23:54",
       "published": false
+    },
+    {
+      "id": "c4b9",
+      "description": "Eric",
+      "featuredImage": "https://i.ytimg.com/vi/NtUhhcRDwhE/hqdefault.jpg?sqp=-oaymwEmCKgBEF5IWvKriqkDGQgBFQAAiEIYAdgBAeIBCggYEAIYBjgBQAE=&rs=AOn4CLBaeDPDtd7L3yVRx9jpI9ek-Yi7aQ",
+      "title": "Eric",
+      "publishDate": "2004-02-01T17:20",
+      "published": false
     }
   ]
 }
