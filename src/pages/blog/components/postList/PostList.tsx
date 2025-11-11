@@ -1,12 +1,18 @@
+import { useDispatch } from "react-redux";
 import { useGetPostsQuery } from "../../blog.service";
 import PostItem from "../postItem";
 import SkeletonPost from "../SkeletonPost";
+import { startEditPost } from "../../blog.slice";
 
 export default function PostList() {
 
   // isLoading chỉ dành cho fetch đầu tiên
   // isFetching là cho mỗi lần gọi api
   const {data, isLoading, isFetching} =  useGetPostsQuery()
+  const dispatch = useDispatch()
+  const startEdit = (id: string) => {
+    dispatch(startEditPost(id))
+  } 
   // console.log(data, isLoading, isFetching)
   return (
     <div className="bg-white py-6 sm:py-8 lg:py-12">
@@ -27,7 +33,8 @@ export default function PostList() {
               <SkeletonPost/>
             </>
           )}
-          {!isFetching && data?.map((post) => <PostItem key={post.id} post={post}/>)}        </div>
+          {!isFetching && data?.map((post,index) => <PostItem key={index} post={post} startEdit={startEdit}/>)}
+        </div>
       </div>
     </div>             
   )

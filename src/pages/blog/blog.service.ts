@@ -66,9 +66,12 @@ export const blogApi = createApi({
                 Trong trường hợp này thì getPosts sẽ chạy lại
             */
             invalidatesTags: (result, error, body) => [{type: 'Posts', id: 'LIST'}]
+       }),
+       getPost: build.query<Post, string>({
+        query: (id) => `posts/${id}`
        })
     })   
 })
 
 // Cái hook này được tạo ra khi ta sử dụng createApi và nó sẽ được đặt tên theo cái endpoints
-export const {useGetPostsQuery, useAddPostMutation} = blogApi
+export const {useGetPostsQuery, useAddPostMutation, useGetPostQuery} = blogApi
