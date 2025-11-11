@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { type Post } from "@/types/blog.type"
-import { useAddPostMutation, useGetPostQuery } from "../../blog.service"
+import { useAddPostMutation, useGetPostQuery, useUpdatePostMutation } from "../../blog.service"
 import { useSelector } from "react-redux"
 import type { RootState } from "@/store"
 
@@ -13,11 +13,12 @@ const initialState: Omit<Post, 'id'> = {
 }
 
 export default function CreatePost() {
-  const [formData, setFormData] = useState<Omit<Post, 'id'>>(initialState)
+  const [formData, setFormData] = useState<Omit<Post, 'id'> | Post>(initialState)
   const [addPost, addPostResult] = useAddPostMutation()
   // lấy id từ trong redux => sử dụng useSelector
   const postId = useSelector((state:RootState) => state.blog.postId)
   const { data } = useGetPostQuery(postId, { skip: !postId })
+  const [updatePost, updatePostResult] = useUpdatePostMutation()
 
   useEffect(()=> {
     if(data) {
@@ -28,7 +29,14 @@ export default function CreatePost() {
   console.log(data)
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    await addPost(formData).unwrap()
+    if (postId) {
+      await updatePost({
+        body: formData as Post,
+        id: postId
+      }).unwrap()
+    } else {
+      await addPost(formData).unwrap()
+    }
     setFormData(initialState)
   }
 
@@ -105,7 +113,7 @@ export default function CreatePost() {
         </label>
       </div>
       <div>
-        {postId && (
+        {Boolean(postId) && (
           <>
             <button
               type='submit'
@@ -125,7 +133,7 @@ export default function CreatePost() {
             </button>
           </>
         )}
-        {!postId && (
+        {Boolean(!postId) && (
           <button
             className='group relative inline-flex items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 p-0.5 text-sm font-medium text-gray-900 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 group-hover:from-purple-600 group-hover:to-blue-500 dark:text-white dark:focus:ring-blue-800'
             type='submit'
