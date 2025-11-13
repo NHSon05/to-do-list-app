@@ -12,6 +12,7 @@ const initialState: Omit<Post, 'id'> = {
   published: false
 }
 
+
 export default function CreatePost() {
   const [formData, setFormData] = useState<Omit<Post, 'id'> | Post>(initialState)
   const [addPost, addPostResult] = useAddPostMutation()
